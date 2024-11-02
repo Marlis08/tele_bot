@@ -1,0 +1,81 @@
+import telebot  
+from telebot import types
+import random 
+from getenv import load_dotenv
+import os
+
+load_dotenv()
+BOT_TOKEN = os.getenv('BOT_TOKEN')
+
+bot = telebot.TeleBot(BOT_TOKEN)
+
+random_btn1 = ''
+random_btn2 = ''
+random_btn3 = ''
+
+@bot.message_handler(commands=['start'])
+def start(message):
+    markup = types.ReplyKeyboardMarkup()
+    btn1 = types.KeyboardButton('Поднять мотивацию!')
+    btn2 = types.KeyboardButton('Выдай цитаты!')
+    btn3 = types.KeyboardButton('Выдай стихи!')
+    markup.row(btn1)
+    markup.row(btn2, btn3)
+    bot.send_message(message.chat.id, 'MotivatorTeleBot вас встречает. Чем вам помочь ?', reply_markup=markup)
+    
+
+
+@bot.message_handler(func=lambda message: True)
+def three_click(message):
+    if message.text == 'Поднять мотивацию!':
+        send_photo(message)
+    elif message.text == 'Выдай цитаты!':
+        send_quote_photo(message)
+    elif message.text == 'Выдай стихи!':
+        send_poetry_photo(message)
+    else:
+        word = random.choice(random_btn1)
+        bot.send_message(message.chat.id, f' {word}')
+
+def send_photo(message):
+    photos = [
+        'C:\\Users\\user\\Downloads\\1.jpg',
+        'C:\\Users\\user\\Downloads\\2.jpg',
+        'C:\\Users\\user\\Downloads\\3.jpg ',
+        'C:\\Users\\user\\Downloads\\4.jpg',
+        'C:\\Users\\user\\Downloads\\5.jpg',
+        'C:\\Users\\user\\Downloads\\6.jpg',
+        'C:\\Users\\user\\Downloads\\7.jpg',
+        'C:\\Users\\user\\Downloads\\8.jpg',
+        'C:\\Users\\user\\Downloads\\9.jpg',
+        'C:\\Users\\user\\Downloads\\10.jpg']
+    photo = open(random.choice(photos), 'rb')
+    bot.send_photo(message.chat.id, photo)
+
+
+def send_quote_photo(message):
+    quote_photos = [
+        'C:\\Users\\user\\Downloads\\один.jpg',
+        'C:\\Users\\user\\Downloads\\два.jpg',
+        'C:\\Users\\user\\Downloads\\три.jpg',
+        'C:\\Users\\user\\Downloads\\четыре.jpg',
+        'C:\\Users\\user\\Downloads\\пять.jpg']
+    photo = open(random.choice(quote_photos), 'rb')
+    bot.send_photo(message.chat.id, photo)
+
+
+def send_poetry_photo(message):
+    poetry_photos = [
+        'C:\\Users\\user\\Downloads\\11.jpg',
+        'C:\\Users\\user\\Downloads\\12.jpg',
+        'C:\\Users\\user\\Downloads\\13.jpg',
+        'C:\\Users\\user\\Downloads\\14.jpg',
+        'C:\\Users\\user\\Downloads\\15.jpg'
+    ]
+    photo = open(random.choice(poetry_photos),'rb')
+    bot.send_photo(message.chat.id,photo)
+
+
+bot.polling()
+
+
